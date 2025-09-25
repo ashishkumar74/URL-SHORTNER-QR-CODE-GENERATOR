@@ -28,7 +28,7 @@ app.listen(5000,()=>{
 import express from "express";
 import { nanoid } from "nanoid"
 import dotenv from "dotenv"
-import connectDB from "./src/config/monogo.config.js"
+import connectDB from "./src/config/mongo.config.js"
 import short_url from "./src/routes/short_url.route.js"
 import user_routes from "./src/routes/user.routes.js"
 import auth_routes from "./src/routes/auth.routes.js"
@@ -61,9 +61,23 @@ app.get("/:id", redirectFromShortUrl)
 
 app.use(errorHandler)
 
-app.listen(5000, () => {
-    connectDB()
-    console.log("Server is running on http://localhost:5000");
-})
+// Start server
+const PORT = process.env.PORT || 5000;
+
+const startServer = async () => {
+    try {
+        // Connect to database first
+        await connectDB();
+        
+        app.listen(PORT, '0.0.0.0', () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error("Failed to start server:", error);
+        process.exit(1);
+    }
+};
+
+startServer();
 
 // GET - Redirection 
