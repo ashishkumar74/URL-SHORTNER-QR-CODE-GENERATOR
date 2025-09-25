@@ -59,6 +59,15 @@ app.use(cookieParser())
 
 app.use(attachUser)
 
+// Health check route
+app.get("/", (req, res) => {
+    res.json({ status: "OK", message: "URL Shortener API is running" });
+});
+
+app.get("/health", (req, res) => {
+    res.json({ status: "OK", timestamp: new Date().toISOString() });
+});
+
 app.use("/api/user", user_routes)
 app.use("/api/auth", auth_routes)
 app.use("/api/create", short_url)
